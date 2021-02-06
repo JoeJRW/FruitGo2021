@@ -78,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent i = new Intent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 //设置跳转的起始界面和目的界面
                                 i.setClass(LoginActivity.this, MainActivity.class);
+                                i.putExtra("user_tel", myPhoneNum);
                                 startActivity(i);
                             }
                             else{
@@ -127,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Intent i = new Intent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     //设置跳转的起始界面和目的界面
                                     i.setClass(LoginActivity.this, MainActivity.class);
+                                    i.putExtra("user_tel", myPhoneNum);
                                     startActivity(i);
                                 }
                                 else{

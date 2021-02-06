@@ -7,12 +7,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.wzh.fruitgo.Fragment.FarmFragment;
 import com.wzh.fruitgo.Fragment.HomeFragmet;
@@ -20,6 +22,10 @@ import com.wzh.fruitgo.Fragment.StoreFragment;
 import com.wzh.fruitgo.Fragment.TodoFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    private TextView user_tel;
+
+    private String user_tel_num = null;//记录登录用户的手机号
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -52,10 +58,10 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_main);
 
-        drawerLayout = findViewById(R.id.drawer_layout);
-
+        initView();//对布局文件中的组件进行初始化，包括activity跳转中的数据提取
         initActionBar();//初始化ActionBar
         initLeftMenuBtn();//初始化 设置侧拉界面中的按钮跳转
+        initFragments();
     }
 
     @Override
@@ -173,7 +179,9 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 初始化界面中显示的fragment
      */
-    private void initView(){
+    private void initFragments(){
+        //对fragmentManager进行初始化
+        fragmentManager = getSupportFragmentManager();
         //获得RadioGroup控件
         mRgGroup = (RadioGroup)findViewById(R.id.rg_group);
         //选择设置Fragment
@@ -283,6 +291,15 @@ public class MainActivity extends AppCompatActivity {
         if (storeFragment != null) {
             transaction.hide(storeFragment);
         }
+    }
+
+    private void initView() {
+        Intent i = getIntent();
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        user_tel = (TextView) findViewById(R.id.user_tel);
+        user_tel_num = i.getStringExtra("user_tel");
+        user_tel.setText(user_tel_num);
     }
 
 }
