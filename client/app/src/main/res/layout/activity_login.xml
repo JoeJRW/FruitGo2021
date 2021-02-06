@@ -95,7 +95,8 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
+        android:minHeight="0dp"
         android:background="#0e000000"
         android:text="忘记密码"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 </RelativeLayout>
