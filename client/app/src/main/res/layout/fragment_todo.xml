@@ -5,6 +5,7 @@
 
 
     <ImageButton
+        android:id="@+id/btn_flag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="35sp"
@@ -12,6 +13,7 @@
         android:src="@drawable/icon_flag"/>
 
     <ImageButton
+        android:id="@+id/btn_statistics"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -20,12 +22,22 @@
 
 
     <ImageButton
-        android:id="@+id/btn_statistics"
+        android:id="@+id/btn_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="35sp"
         android:layout_marginTop="5sp"
         android:src="@drawable/icon_add" />
+
+    <ListView
+        android:id="@+id/missionList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/btn_add"
+        android:layout_marginTop="5sp"
+        android:background="#DAA520"
+        android:divider="#ffffff"
+        />
 
 </RelativeLayout>
