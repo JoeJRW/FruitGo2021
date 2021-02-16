@@ -18,7 +18,7 @@ public class User {
 //    private Integer age;
 //    private String email;
 
-    @TableId(type = IdType.INPUT)
+    @TableId(type = IdType.AUTO)
     private Long id;
     private String tel;
     private String password;

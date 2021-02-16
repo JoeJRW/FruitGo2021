@@ -54,6 +54,9 @@ public class LoginActivity extends AppCompatActivity {
         initView();
         initAccount();
 
+        /**
+         * 自动登录流程
+         */
         if(isAutoLogin){
             new Thread(new Runnable() {
                 @Override
@@ -79,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                                 //设置跳转的起始界面和目的界面
                                 i.setClass(LoginActivity.this, MainActivity.class);
                                 i.putExtra("user_tel", myPhoneNum);
+                                i.putExtra("user_id", user.getId());
                                 startActivity(i);
                             }
                             else{
@@ -94,6 +98,9 @@ public class LoginActivity extends AppCompatActivity {
             }).start();
         }
 
+        /**
+         * 正常登录流程
+         */
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,6 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                                     //设置跳转的起始界面和目的界面
                                     i.setClass(LoginActivity.this, MainActivity.class);
                                     i.putExtra("user_tel", myPhoneNum);
+                                    i.putExtra("user_id", user.getId());
                                     startActivity(i);
                                 }
                                 else{

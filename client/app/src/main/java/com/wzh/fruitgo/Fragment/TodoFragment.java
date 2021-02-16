@@ -1,27 +1,41 @@
 package com.wzh.fruitgo.Fragment;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Looper;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.alibaba.fastjson.JSONArray;
 import com.wzh.fruitgo.Adapter.MissionAdapter;
 import com.wzh.fruitgo.Bean.Mission;
-import com.wzh.fruitgo.MainActivity;
+import com.wzh.fruitgo.Bean.User;
 import com.wzh.fruitgo.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+import static com.wzh.fruitgo.Config.DBConstant.MISSION_URL;
 
 public class TodoFragment extends Fragment {
     /**
@@ -32,12 +46,17 @@ public class TodoFragment extends Fragment {
      * 在onCreateView()中首先还是找到为它写的布局文件，返回视图文件
      * 在onViewCreated()中找到其视图文件中的各类控件进行使用
      */
+    private Long userId;
 
     private ImageButton btn_flag;
     private ImageButton btn_statistics;
     private ImageButton btn_add;
     private ListView missionList;
 
+    private AlertDialog.Builder alertDialogBuilder;
+
+    private MissionAdapter missionAdapter;
+    private OkHttpClient okHttpClient;
     private List<Mission> missions = new ArrayList<>();
 
     @Nullable
@@ -45,6 +64,8 @@ public class TodoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_todo, null);
+        okHttpClient = new OkHttpClient();
+        getMissions();
         return view;
     }
 
@@ -52,10 +73,7 @@ public class TodoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initMissions();
-
         initView(view);//包含控件初始化&按钮点击事件的绑定&listview绑定适配器和监听器
-
     }
 
     private void initView(View view){
@@ -90,11 +108,73 @@ public class TodoFragment extends Fragment {
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                alertDialogBuilder = new AlertDialog.Builder(getContext());
+                View viewAddMission = View.inflate(getContext(), R.layout.mission_item, null);
 
+                EditText m_name = (EditText) viewAddMission.findViewById(R.id.m_name);
+                EditText m_duration = (EditText) viewAddMission.findViewById(R.id.m_duration);
+                Button mission_cancel = (Button) viewAddMission.findViewById(R.id.mission_cancel);
+                Button mission_confirm = (Button) viewAddMission.findViewById(R.id.mission_confirm);
+
+                alertDialogBuilder.setTitle("创建任务").setIcon(R.drawable.icon_mission_add).setView(viewAddMission);
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+                //弹窗取消键
+                mission_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+                //弹窗确认键
+                mission_confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(TextUtils.isEmpty(m_name.getText())){
+                            Toast.makeText(getActivity(), "请输入任务名称", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String name = m_name.getText().toString();
+                        if(TextUtils.isEmpty(m_duration.getText())){
+                            Toast.makeText(getActivity(), "请输入任务时长", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        Integer duration = Integer.parseInt(m_duration.getEditableText().toString().trim());
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                FormBody formBody = new FormBody.Builder()
+                                        .add("userId", String.valueOf(userId))
+                                        .add("missionName", name)
+                                        .add("missionDuration", String.valueOf(duration))
+                                        .build();
+                                Request request = new Request.Builder()
+                                        .url(MISSION_URL+"mission")
+                                        .post(formBody)
+                                        .build();
+                                try(Response response = okHttpClient.newCall(request).execute()) {
+                                    Looper.prepare();
+                                    if(response.code() == 200){
+                                        Toast.makeText(getActivity(), "添加成功", Toast.LENGTH_SHORT).show();
+                                        getMissions();
+                                    }
+                                    else{
+                                        Toast.makeText(getActivity(), "添加失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                    alertDialog.dismiss();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+                    }
+                });
             }
         });
 
-        MissionAdapter missionAdapter = new MissionAdapter(getContext(), R.layout.listview_item_mission, missions);
+        missionAdapter = new MissionAdapter(getContext(), R.layout.listview_item_mission, missions);
         missionList.setAdapter(missionAdapter);
 
         /**
@@ -106,25 +186,83 @@ public class TodoFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //TODO listview item 点击事件处理逻辑
                 Mission mission = missions.get(position);
-                Toast.makeText(getActivity(), mission.getName(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), mission.getMissionName(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        /**
+         *
+         */
+        missionList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Mission mission = missions.get(position);
+                alertDialogBuilder = new AlertDialog.Builder(getContext());
+                alertDialogBuilder.setMessage("确定删除任务"+mission.getMissionName());
+                alertDialogBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                FormBody formBody = new FormBody.Builder()
+                                        .add("mId", mission.getId().toString()).build();
+                                Request request = new Request.Builder()
+                                        .url(MISSION_URL+"mission")
+                                        .delete(formBody)
+                                        .build();
+                                try(Response response = okHttpClient.newCall(request).execute()) {
+                                    Looper.prepare();
+                                    if(response.code() == 200){
+                                        Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
+                                        getMissions();
+                                    }
+                                    else{
+                                        Toast.makeText(getActivity(), "删除失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                }catch (IOException e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+                    }
+                });
+                alertDialogBuilder.setNegativeButton("取消", null);
+                alertDialogBuilder.create().show();
+                return true;
             }
         });
     }
 
-    private void initMissions() {
-        //TODO 访问服务器，读取数据库
-        for (int i = 0; i < 10; i++) {
-            Mission a = new Mission("a", "20分钟");
-            missions.add(a);
-            Mission b = new Mission("b", "40分钟");
-            missions.add(b);
-            Mission c = new Mission("c", "90分钟");
-            missions.add(c);
-        }
+    private void getMissions() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Request request = new Request.Builder()
+                        .url(MISSION_URL+"mission/"+userId)
+                        .get()
+                        .build();
+                try(Response response = okHttpClient.newCall(request).execute()) {
+                    missions.clear();
+                    missions.addAll(JSONArray.parseArray(response.body().string(), Mission.class));
+                    Collections.reverse(missions);
+                    //网络请求是异步请求，所以请求需要时间，请求为完成时可能画面已经生成了，所以会出现listview空白
+                    //需要回到主线程更新listview
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            missionAdapter.notifyDataSetChanged();
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
-    private void missionItemPopupWindow(View view, int position){
-
+    public void setUserId(Long userId){
+        this.userId = userId;
     }
 
 }

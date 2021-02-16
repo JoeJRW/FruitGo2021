@@ -1,29 +1,68 @@
 package com.wzh.fruitgo.Bean;
 
-import androidx.annotation.NonNull;
-
 public class Mission {
-    private String name;
-    private String duration;
+    private Long id;
+    private Long userId;
+    private String missionName;
+    private String missionDuration;
+    private Integer compNum;
+
+    public Mission() {
+    }
 
     public Mission(String name, String duration){
-        this.name=name;
-        this.duration=duration;
+        this.missionName =name;
+        this.missionDuration =duration;
     }
 
-    public String getName() {
-        return name;
+    public Long getId() {
+        return id;
     }
 
-    public String getDuration() {
-        return duration;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getMissionName() {
+        return missionName;
+    }
+
+    public void setMissionName(String missionName) {
+        this.missionName = missionName;
+    }
+
+    public String getMissionDuration() {
+        return missionDuration;
+    }
+
+    public void setMissionDuration(String missionDuration) {
+        this.missionDuration = missionDuration;
+    }
+
+    public Integer getCompNum() {
+        return compNum;
+    }
+
+    public void setCompNum(Integer compNum) {
+        this.compNum = compNum;
     }
 
     @Override
     public String toString() {
         return "Mission{" +
-                "name='" + name + '\'' +
-                ", duration='" + duration + '\'' +
+                "id=" + id +
+                ", userId=" + userId +
+                ", missionName='" + missionName + '\'' +
+                ", missionDuration='" + missionDuration + '\'' +
+                ", compNum=" + compNum +
                 '}';
     }
 }

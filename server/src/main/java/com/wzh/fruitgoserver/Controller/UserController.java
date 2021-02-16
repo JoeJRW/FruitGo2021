@@ -17,8 +17,7 @@ public class UserController {
 
     @PostMapping("/user")
     public boolean addUser(User user){
-        userService.save(user);
-        return true;
+        return userService.save(user);
     }
 
     @PostMapping("/getUser")

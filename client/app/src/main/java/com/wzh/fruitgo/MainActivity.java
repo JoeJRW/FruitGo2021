@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView user_tel;
 
     private String user_tel_num = null;//记录登录用户的手机号
+    private Long userId = null;//记录登录用户的用户id
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -242,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
                 mRgGroup.check(R.id.rb_todo);
                 if (todoFragment == null) {
                     todoFragment = new TodoFragment();
+                    todoFragment.setUserId(userId);
                     transaction.add(R.id.fl_container, todoFragment, FRAGMENT_TAG[index]);
                 } else {
                     transaction.show(todoFragment);
@@ -299,6 +301,7 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         user_tel = (TextView) findViewById(R.id.user_tel);
         user_tel_num = i.getStringExtra("user_tel");
+        userId = i.getLongExtra("user_id", 0);
         user_tel.setText(user_tel_num);
     }
 

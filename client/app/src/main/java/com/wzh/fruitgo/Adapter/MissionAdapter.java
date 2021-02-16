@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.wzh.fruitgo.Bean.Mission;
 import com.wzh.fruitgo.R;
@@ -62,8 +61,8 @@ public class MissionAdapter extends ArrayAdapter<Mission> {
         }
 
         // 获取控件实例，并调用set...方法使其显示出来
-        viewHolder.missionName.setText(mission.getName());
-        viewHolder.missionDuration.setText(mission.getDuration());
+        viewHolder.missionName.setText(mission.getMissionName());
+        viewHolder.missionDuration.setText(mission.getMissionDuration());
         return view;
 
     }
