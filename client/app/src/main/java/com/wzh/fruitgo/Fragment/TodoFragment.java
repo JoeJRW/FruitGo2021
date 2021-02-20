@@ -2,6 +2,7 @@ package com.wzh.fruitgo.Fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,9 +22,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.alibaba.fastjson.JSONArray;
+import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
+import com.wzh.fruitgo.Activity.LoginActivity;
+import com.wzh.fruitgo.Activity.MissionActivity;
 import com.wzh.fruitgo.Adapter.MissionAdapter;
 import com.wzh.fruitgo.Bean.Mission;
 import com.wzh.fruitgo.Bean.User;
+import com.wzh.fruitgo.MainActivity;
 import com.wzh.fruitgo.R;
 
 import java.io.IOException;
@@ -176,26 +182,22 @@ public class TodoFragment extends Fragment {
 
         missionAdapter = new MissionAdapter(getContext(), R.layout.listview_item_mission, missions);
         missionList.setAdapter(missionAdapter);
-
-        /**
-         * 为ListView注册一个监听器，当用户点击了ListView中的任何一个子项时，就会回调onItemClick()方法
-         * 在这个方法中可以通过position参数判断出用户点击的是那一个子项
-         */
-        missionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        missionAdapter.setOnClickListener(new MissionAdapter.MissionClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onMissionStart(BaseAdapter adapter, View view, int position) {
                 //TODO listview item 点击事件处理逻辑
                 Mission mission = missions.get(position);
-                Toast.makeText(getActivity(), mission.getMissionName(), Toast.LENGTH_LONG).show();
+                String duration = mission.getMissionDuration();
+                Intent i = new Intent();
+                //设置跳转的起始界面和目的界面
+                i.setClass(getContext(), MissionActivity.class);
+                i.putExtra("mission_duration", Long.valueOf(duration));
+                i.putExtra("user_id", userId);
+                startActivity(i);
             }
-        });
 
-        /**
-         *
-         */
-        missionList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onMissionDelete(BaseAdapter adapter, View view, int position) {
                 Mission mission = missions.get(position);
                 alertDialogBuilder = new AlertDialog.Builder(getContext());
                 alertDialogBuilder.setMessage("确定删除任务"+mission.getMissionName());
@@ -215,6 +217,8 @@ public class TodoFragment extends Fragment {
                                     Looper.prepare();
                                     if(response.code() == 200){
                                         Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
+                                        View v = missionList.getChildAt(position);
+                                        ((SwipeMenuLayout)v).quickClose();
                                         getMissions();
                                     }
                                     else{
@@ -229,11 +233,103 @@ public class TodoFragment extends Fragment {
                 });
                 alertDialogBuilder.setNegativeButton("取消", null);
                 alertDialogBuilder.create().show();
+            }
+        });
+
+        /**
+         * 单击listview中的item，由于和侧滑菜单冲突，所以不可用
+         */
+        missionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+
+        /**
+         * 为ListView注册一个监听器，当用户长按了ListView中的任何一个子项时，就会回调OnItemLongClickListener()方法
+         * 在这个方法中可以通过position参数判断出用户点击的是那一个子项
+         */
+        missionList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Mission mission = missions.get(position);
+
+                alertDialogBuilder = new AlertDialog.Builder(getContext());
+                View viewAddMission = View.inflate(getContext(), R.layout.mission_item, null);
+
+                EditText m_name = (EditText) viewAddMission.findViewById(R.id.m_name);
+                EditText m_duration = (EditText) viewAddMission.findViewById(R.id.m_duration);
+                Button mission_cancel = (Button) viewAddMission.findViewById(R.id.mission_cancel);
+                Button mission_confirm = (Button) viewAddMission.findViewById(R.id.mission_confirm);
+
+                m_name.setText(mission.getMissionName());
+                m_duration.setText(mission.getMissionDuration());
+                alertDialogBuilder.setTitle("编辑").setIcon(R.drawable.icon_edit).setView(viewAddMission);
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+                //弹窗取消键
+                mission_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+                //弹窗确认键
+                mission_confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(TextUtils.isEmpty(m_name.getText())){
+                            Toast.makeText(getActivity(), "请输入任务名称", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String name = m_name.getText().toString();
+                        if(TextUtils.isEmpty(m_duration.getText())){
+                            Toast.makeText(getActivity(), "请输入任务时长", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        Integer duration = Integer.parseInt(m_duration.getEditableText().toString().trim());
+
+                        //TODO 服务器交互
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                FormBody formBody = new FormBody.Builder()
+                                        .add("userId", String.valueOf(userId))
+                                        .add("missionName", name)
+                                        .add("missionDuration", String.valueOf(duration))
+                                        .build();
+                                Request request = new Request.Builder()
+                                        .url(MISSION_URL+"mission")
+                                        .post(formBody)
+                                        .build();
+                                try(Response response = okHttpClient.newCall(request).execute()) {
+                                    Looper.prepare();
+                                    if(response.code() == 200){
+                                        Toast.makeText(getActivity(), "修改成功", Toast.LENGTH_SHORT).show();
+                                        getMissions();
+                                    }
+                                    else{
+                                        Toast.makeText(getActivity(), "修改失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                    alertDialog.dismiss();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+                    }
+                });
                 return true;
             }
         });
     }
 
+    /**
+     * 获取服务器端最新的missionlist，并更新listview
+     */
     private void getMissions() {
         new Thread(new Runnable() {
             @Override
@@ -261,6 +357,10 @@ public class TodoFragment extends Fragment {
         }).start();
     }
 
+    /**
+     * public方法，用于在吗inactivity中设置userId的值并传至本fragment
+     * @param userId
+     */
     public void setUserId(Long userId){
         this.userId = userId;
     }
