@@ -73,6 +73,11 @@ public class MissionActivity extends AppCompatActivity {
         initView();//绑定控件，初始化倒计时表timer和时钟clockview，并启动；按键点击事件
     }
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
     private void initView(){
         getSupportActionBar().hide();
 
@@ -113,12 +118,13 @@ public class MissionActivity extends AppCompatActivity {
                             if(response.code() == 200){
                                 Toast.makeText(MissionActivity.this, "成功完成一次任务", Toast.LENGTH_SHORT).show();
 
-                                Intent i = new Intent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                Intent i = new Intent().setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 //设置跳转的起始界面和目的界面
                                 i.setClass(MissionActivity.this, MainActivity.class);
                                 i.putExtra("user_tel", userTel);
                                 i.putExtra("user_id", userId);
                                 startActivity(i);
+                                MissionActivity.this.finish();
                             }
                             else{
                                 Toast.makeText(MissionActivity.this, "完成失败", Toast.LENGTH_SHORT).show();
@@ -178,12 +184,13 @@ public class MissionActivity extends AppCompatActivity {
                                             if(response.code() == 200){
                                                 Toast.makeText(MissionActivity.this, "成功完成一次任务", Toast.LENGTH_SHORT).show();
 
-                                                Intent i = new Intent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                                Intent i = new Intent().setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                                 //设置跳转的起始界面和目的界面
                                                 i.setClass(MissionActivity.this, MainActivity.class);
                                                 i.putExtra("user_tel", userTel);
                                                 i.putExtra("user_id", userId);
                                                 startActivity(i);
+                                                MissionActivity.this.finish();
                                             }
                                             else{
                                                 Toast.makeText(MissionActivity.this, "完成失败", Toast.LENGTH_SHORT).show();
@@ -214,12 +221,13 @@ public class MissionActivity extends AppCompatActivity {
                 alertDialogBuilder.setPositiveButton("确定退出", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        Intent i = new Intent().setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         //设置跳转的起始界面和目的界面
                         i.setClass(MissionActivity.this, MainActivity.class);
                         i.putExtra("user_tel", userTel);
                         i.putExtra("user_id", userId);
                         startActivity(i);
+                        MissionActivity.this.finish();
                     }
                 });
                 alertDialogBuilder.setNegativeButton("继续任务", new DialogInterface.OnClickListener() {
@@ -252,12 +260,13 @@ public class MissionActivity extends AppCompatActivity {
                                             if(response.code() == 200){
                                                 Toast.makeText(MissionActivity.this, "成功完成一次任务", Toast.LENGTH_SHORT).show();
 
-                                                Intent i = new Intent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                                Intent i = new Intent().setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                                 //设置跳转的起始界面和目的界面
                                                 i.setClass(MissionActivity.this, MainActivity.class);
                                                 i.putExtra("user_tel", userTel);
                                                 i.putExtra("user_id", userId);
                                                 startActivity(i);
+                                                MissionActivity.this.finish();
                                             }
                                             else{
                                                 Toast.makeText(MissionActivity.this, "完成失败", Toast.LENGTH_SHORT).show();
