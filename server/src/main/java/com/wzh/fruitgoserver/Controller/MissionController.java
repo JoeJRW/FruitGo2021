@@ -54,6 +54,11 @@ public class MissionController {
             return false;
     }
 
+    @PutMapping("/mission")
+    public boolean updateMission(Mission mission){
+        return missionService.updateById(mission);
+    }
+
     /**
      * 修改任务时长
      * @param mId

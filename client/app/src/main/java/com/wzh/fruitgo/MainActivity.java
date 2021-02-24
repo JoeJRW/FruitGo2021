@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                 mRgGroup.check(R.id.rb_todo);
                 if (todoFragment == null) {
                     todoFragment = new TodoFragment();
-                    todoFragment.setUserId(userId);
+                    todoFragment.setUserInform(userId, user_tel_num);
                     transaction.add(R.id.fl_container, todoFragment, FRAGMENT_TAG[index]);
                 } else {
                     transaction.show(todoFragment);

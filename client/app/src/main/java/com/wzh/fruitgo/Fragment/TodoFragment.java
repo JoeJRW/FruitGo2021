@@ -53,6 +53,7 @@ public class TodoFragment extends Fragment {
      * 在onViewCreated()中找到其视图文件中的各类控件进行使用
      */
     private Long userId;
+    private String userTel;
 
     private ImageButton btn_flag;
     private ImageButton btn_statistics;
@@ -80,6 +81,12 @@ public class TodoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         initView(view);//包含控件初始化&按钮点击事件的绑定&listview绑定适配器和监听器
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getMissions();
     }
 
     private void initView(View view){
@@ -148,6 +155,10 @@ public class TodoFragment extends Fragment {
                             return;
                         }
                         Integer duration = Integer.parseInt(m_duration.getEditableText().toString().trim());
+                        if(duration == 0){
+                            Toast.makeText(getActivity(), "任务时长不得为0", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -185,14 +196,18 @@ public class TodoFragment extends Fragment {
         missionAdapter.setOnClickListener(new MissionAdapter.MissionClickListener() {
             @Override
             public void onMissionStart(BaseAdapter adapter, View view, int position) {
-                //TODO listview item 点击事件处理逻辑
                 Mission mission = missions.get(position);
                 String duration = mission.getMissionDuration();
+                Long m_id = mission.getId();
+                int comp = mission.getCompNum();
                 Intent i = new Intent();
                 //设置跳转的起始界面和目的界面
                 i.setClass(getContext(), MissionActivity.class);
                 i.putExtra("mission_duration", Long.valueOf(duration));
                 i.putExtra("user_id", userId);
+                i.putExtra("user_tel", userTel);
+                i.putExtra("m_id", m_id);
+                i.putExtra("compNum", comp);
                 startActivity(i);
             }
 
@@ -265,6 +280,8 @@ public class TodoFragment extends Fragment {
 
                 m_name.setText(mission.getMissionName());
                 m_duration.setText(mission.getMissionDuration());
+                Long m_id = mission.getId();
+                int m_comp = mission.getCompNum();
                 alertDialogBuilder.setTitle("编辑").setIcon(R.drawable.icon_edit).setView(viewAddMission);
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
@@ -291,25 +308,28 @@ public class TodoFragment extends Fragment {
                             return;
                         }
                         Integer duration = Integer.parseInt(m_duration.getEditableText().toString().trim());
-
-                        //TODO 服务器交互
+                        if(duration == 0){
+                            Toast.makeText(getActivity(), "任务时长不得为0", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 FormBody formBody = new FormBody.Builder()
-                                        .add("userId", String.valueOf(userId))
+                                        .add("id", String.valueOf(m_id))
                                         .add("missionName", name)
                                         .add("missionDuration", String.valueOf(duration))
+                                        .add("compNum", String.valueOf(m_comp))
                                         .build();
                                 Request request = new Request.Builder()
                                         .url(MISSION_URL+"mission")
-                                        .post(formBody)
+                                        .put(formBody)
                                         .build();
                                 try(Response response = okHttpClient.newCall(request).execute()) {
                                     Looper.prepare();
                                     if(response.code() == 200){
-                                        Toast.makeText(getActivity(), "修改成功", Toast.LENGTH_SHORT).show();
                                         getMissions();
+                                        Toast.makeText(getActivity(), "修改成功", Toast.LENGTH_SHORT).show();
                                     }
                                     else{
                                         Toast.makeText(getActivity(), "修改失败", Toast.LENGTH_SHORT).show();
@@ -358,11 +378,13 @@ public class TodoFragment extends Fragment {
     }
 
     /**
-     * public方法，用于在吗inactivity中设置userId的值并传至本fragment
+     * public方法，用于在吗inactivity中设置userId和userTel的值并传至本fragment
      * @param userId
+     * @param user_tel
      */
-    public void setUserId(Long userId){
+    public void setUserInform(Long userId, String user_tel) {
         this.userId = userId;
+        this.userTel = user_tel;
     }
 
 }
