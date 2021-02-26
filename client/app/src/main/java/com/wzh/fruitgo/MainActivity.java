@@ -8,18 +8,34 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Looper;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.wzh.fruitgo.Activity.LoginActivity;
+import com.wzh.fruitgo.Activity.RegisterActivity;
+import com.wzh.fruitgo.Config.DBConstant;
 import com.wzh.fruitgo.Fragment.FarmFragment;
 import com.wzh.fruitgo.Fragment.HomeFragmet;
 import com.wzh.fruitgo.Fragment.StoreFragment;
 import com.wzh.fruitgo.Fragment.TodoFragment;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private static final String PRV_SELINDEX = "PREV_SELINDEX";
 
+    private String todayTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         initActionBar();//初始化ActionBar
         initLeftMenuBtn();//初始化 设置侧拉界面中的按钮跳转
         initFragments();
+        firstLogin();
     }
 
     @Override
@@ -254,6 +273,7 @@ public class MainActivity extends AppCompatActivity {
                 mRgGroup.check(R.id.rb_farm);
                 if (farmFragment == null) {
                     farmFragment = new FarmFragment();
+                    farmFragment.setUserInform(userId);
                     transaction.add(R.id.fl_container, farmFragment, FRAGMENT_TAG[index]);
                 } else {
                     transaction.show(farmFragment);
@@ -305,4 +325,62 @@ public class MainActivity extends AppCompatActivity {
         user_tel.setText(user_tel_num);
     }
 
+    /**
+     * 判断是否为当日第一次登录
+     * @return 是true否false
+     */
+    private boolean isTodayFirstLogin() {
+        SharedPreferences preferences = getSharedPreferences("LastLoginTime", MODE_PRIVATE);
+        String lastTime = preferences.getString("LoginTime", userId + " " +"2021-01-01");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
+        todayTime = df.format(new Date());// 获取当前的日期
+        return !lastTime.equals(userId+" "+todayTime);
+    }
+
+    private void saveExitTime(String exitLoginTime) {
+        SharedPreferences.Editor editor = getSharedPreferences("LastLoginTime", MODE_PRIVATE).edit();
+        editor.putString("LoginTime", exitLoginTime);
+        //这里用apply()而没有用commit()是因为apply()是异步处理提交，不需要返回结果，而我也没有后续操作
+        //而commit()是同步的，效率相对较低
+        //apply()提交的数据会覆盖之前的,这个需求正是我们需要的结果
+        editor.apply();
+    }
+
+
+    private void firstLogin() {
+        if(isTodayFirstLogin()){
+            saveExitTime(userId+" "+todayTime);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    OkHttpClient okHttpClient = new OkHttpClient();
+                    Date date = new Date();
+                    SimpleDateFormat dformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    FormBody formBody = new FormBody.Builder()
+                            .add("userId", String.valueOf(userId))
+                            .add("bonusType", String.valueOf(1))
+                            .add("value", String.valueOf(5))
+                            .add("createTime", dformat.format(date))
+                            .build();
+                    Request request = new Request.Builder()
+                            .url(DBConstant.BONUS_URL+"bonus")
+                            .post(formBody)
+                            .build();
+                    try (Response response = okHttpClient.newCall(request).execute()) {
+                        Looper.prepare();
+                        if (response.code() == 200)
+                        {
+                            Toast.makeText(MainActivity.this, "获得登录奖励，快去农场看看吧！", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Toast.makeText(MainActivity.this, "奖励获取异常", Toast.LENGTH_SHORT).show();
+                        }
+                        Looper.loop();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+    }
 }

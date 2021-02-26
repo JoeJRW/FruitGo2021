@@ -22,12 +22,5 @@ class FruitgoserverApplicationTests {
     void contextLoads() {
     }
 
-    @Test
-    void testDatabase(){
-        System.out.println(("----- selectAll method test ------"));
-        List<User> userList = userMapper.selectList(null);
-        Assert.assertEquals(5, userList.size());
-        userList.forEach(System.out::println);
-    }
 
 }

@@ -378,7 +378,7 @@ public class TodoFragment extends Fragment {
     }
 
     /**
-     * public方法，用于在吗inactivity中设置userId和userTel的值并传至本fragment
+     * public方法，用于在MainActivity中设置userId和userTel的值并传至本fragment
      * @param userId
      * @param user_tel
      */

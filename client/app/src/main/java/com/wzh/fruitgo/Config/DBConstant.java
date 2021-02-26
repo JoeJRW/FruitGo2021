@@ -5,5 +5,6 @@ public class DBConstant {
 
     public static String USER_URL = URL+"user/";
     public static String MISSION_URL = URL +"mission/";
+    public static String BONUS_URL = URL + "bonus/";
 
 }

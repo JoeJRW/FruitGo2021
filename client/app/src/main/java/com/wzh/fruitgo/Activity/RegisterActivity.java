@@ -102,11 +102,11 @@ public class RegisterActivity extends AppCompatActivity {
                                     //设置跳转的起始界面和目的界面
                                     intentToLogin.setClass(RegisterActivity.this, LoginActivity.class);
                                     //清空偏好配置
-                                    LocalStorageUtil.clearSettingNote(LoginActivity.instance,"userPreferences");
-                                    //把手机号保存到本地
-                                    Map<String, String> map = new HashMap<String, String>();
-                                    map.put("userphone", tel);
-                                    LocalStorageUtil.saveSettingNote(LoginActivity.instance,"userPreferences",map);
+//                                    LocalStorageUtil.clearSettingNote(LoginActivity.instance,"userPreferences");
+//                                    //把手机号保存到本地
+//                                    Map<String, String> map = new HashMap<String, String>();
+//                                    map.put("userphone", tel);
+//                                    LocalStorageUtil.saveSettingNote(LoginActivity.instance,"userPreferences",map);
                                     //启动跳转
                                     startActivity(intentToLogin);
                                 }
