@@ -277,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
                     transaction.add(R.id.fl_container, farmFragment, FRAGMENT_TAG[index]);
                 } else {
                     transaction.show(farmFragment);
+                    farmFragment.resetWaterView();
                 }
                 transaction.commit();
                 break;

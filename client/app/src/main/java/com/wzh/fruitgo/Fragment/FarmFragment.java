@@ -63,9 +63,10 @@ public class FarmFragment extends Fragment {
                         .get()
                         .build();
                 try(Response response = okHttpClient.newCall(request).execute()) {
+                    bonuses.clear();
                     bonuses.addAll(JSONArray.parseArray(response.body().string(), Bonus.class));
                     for (Bonus b:bonuses) {
-                        mWaters.add(new Water(b.getValue(), "bonus" + b.getId()));
+                        mWaters.add(new Water(b.getId(), b.getValue(), "bonus" + b.getId()));
                     }
                     mWaterView.setWaters(mWaters);
                 } catch (IOException e) {
@@ -73,11 +74,6 @@ public class FarmFragment extends Fragment {
                 }
             }
         }).start();
-
-//        for (int i = 0; i <10; i++) {
-//            mWaters.add(new Water((int) (i + Math.random() * 4), "item" + i));
-//        }
-
     }
 
     /**
@@ -86,5 +82,28 @@ public class FarmFragment extends Fragment {
      */
     public void setUserInform(Long userId) {
         this.userId = userId;
+    }
+
+    public void resetWaterView(){
+        mWaters.clear();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Request request = new Request.Builder()
+                        .url(BONUS_URL+"tbonus/"+userId)
+                        .get()
+                        .build();
+                try(Response response = okHttpClient.newCall(request).execute()) {
+                    bonuses.clear();
+                    bonuses.addAll(JSONArray.parseArray(response.body().string(), Bonus.class));
+                    for (Bonus b:bonuses) {
+                        mWaters.add(new Water(b.getId(), b.getValue(), "bonus" + b.getId()));
+                    }
+                    mWaterView.setWaters(mWaters);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

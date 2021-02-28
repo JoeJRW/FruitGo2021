@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
+import com.wzh.fruitgo.Config.DBConstant;
 import com.wzh.fruitgo.MainActivity;
 import com.wzh.fruitgo.R;
 import com.wzh.fruitgo.View.AlarmClockView;
@@ -24,6 +25,7 @@ import com.wzh.fruitgo.View.LEDView;
 import com.wzh.fruitgo.View.TimeChangeListener;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -54,6 +56,8 @@ public class MissionActivity extends AppCompatActivity {
     private AlertDialog.Builder alertDialogBuilder;
 
     private Long remainingTime;
+
+    private int bonusValue = 0;
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -134,6 +138,42 @@ public class MissionActivity extends AppCompatActivity {
                         }
                     }
                 }).start();
+                if(mission_duration <= 40){
+                    return;
+                }
+                else {
+                    bonusValue = (int) (mission_duration / 5);
+                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Date date = new Date();
+                        SimpleDateFormat dformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        FormBody formBody = new FormBody.Builder()
+                                .add("userId", String.valueOf(userId))
+                                .add("bonusType", String.valueOf(2))
+                                .add("value", String.valueOf(bonusValue))
+                                .add("createTime", dformat.format(date))
+                                .build();
+                        Request request = new Request.Builder()
+                                .url(DBConstant.BONUS_URL+"bonus")
+                                .post(formBody)
+                                .build();
+                        try (Response response = okHttpClient.newCall(request).execute()) {
+                            Looper.prepare();
+                            if (response.code() == 200)
+                            {
+                                Toast.makeText(MissionActivity.this, "获得任务完成奖励，快去农场看看吧！", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(MissionActivity.this, "奖励获取异常", Toast.LENGTH_SHORT).show();
+                            }
+                            Looper.loop();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
             }
         };
 
@@ -196,6 +236,42 @@ public class MissionActivity extends AppCompatActivity {
                                                 Toast.makeText(MissionActivity.this, "完成失败", Toast.LENGTH_SHORT).show();
                                             }
                                         }catch (IOException e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }).start();
+                                if(mission_duration <= 40){
+                                    return;
+                                }
+                                else {
+                                    bonusValue = (int) (mission_duration / 5);
+                                }
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Date date = new Date();
+                                        SimpleDateFormat dformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                        FormBody formBody = new FormBody.Builder()
+                                                .add("userId", String.valueOf(userId))
+                                                .add("bonusType", String.valueOf(2))
+                                                .add("value", String.valueOf(bonusValue))
+                                                .add("createTime", dformat.format(date))
+                                                .build();
+                                        Request request = new Request.Builder()
+                                                .url(DBConstant.BONUS_URL+"bonus")
+                                                .post(formBody)
+                                                .build();
+                                        try (Response response = okHttpClient.newCall(request).execute()) {
+                                            Looper.prepare();
+                                            if (response.code() == 200)
+                                            {
+                                                Toast.makeText(MissionActivity.this, "获得任务完成奖励，快去农场看看吧！", Toast.LENGTH_SHORT).show();
+                                            }
+                                            else{
+                                                Toast.makeText(MissionActivity.this, "奖励获取异常", Toast.LENGTH_SHORT).show();
+                                            }
+                                            Looper.loop();
+                                        } catch (IOException e) {
                                             e.printStackTrace();
                                         }
                                     }
@@ -272,6 +348,42 @@ public class MissionActivity extends AppCompatActivity {
                                                 Toast.makeText(MissionActivity.this, "完成失败", Toast.LENGTH_SHORT).show();
                                             }
                                         }catch (IOException e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }).start();
+                                if(mission_duration <= 40){
+                                    return;
+                                }
+                                else {
+                                    bonusValue = (int) (mission_duration / 5);
+                                }
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Date date = new Date();
+                                        SimpleDateFormat dformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                        FormBody formBody = new FormBody.Builder()
+                                                .add("userId", String.valueOf(userId))
+                                                .add("bonusType", String.valueOf(2))
+                                                .add("value", String.valueOf(bonusValue))
+                                                .add("createTime", dformat.format(date))
+                                                .build();
+                                        Request request = new Request.Builder()
+                                                .url(DBConstant.BONUS_URL+"bonus")
+                                                .post(formBody)
+                                                .build();
+                                        try (Response response = okHttpClient.newCall(request).execute()) {
+                                            Looper.prepare();
+                                            if (response.code() == 200)
+                                            {
+                                                Toast.makeText(MissionActivity.this, "获得任务完成奖励，快去农场看看吧！", Toast.LENGTH_SHORT).show();
+                                            }
+                                            else{
+                                                Toast.makeText(MissionActivity.this, "奖励获取异常", Toast.LENGTH_SHORT).show();
+                                            }
+                                            Looper.loop();
+                                        } catch (IOException e) {
                                             e.printStackTrace();
                                         }
                                     }

@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -19,13 +20,23 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.wzh.fruitgo.Activity.MissionActivity;
 import com.wzh.fruitgo.Bean.Water;
+import com.wzh.fruitgo.Config.DBConstant;
 import com.wzh.fruitgo.R;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class WaterView extends FrameLayout {
     private static final int WHAT_ADD_PROGRESS = 1;
@@ -236,8 +247,35 @@ public class WaterView extends FrameLayout {
         if (tag instanceof Water) {
             Water waterTag = (Water) tag;
             mTotalConsumeWater += waterTag.getNumber();
-             Toast.makeText(getContext(), "当前点击的是：" + waterTag.getName() + "水滴的值是:"
-                    + waterTag.getNumber() + "总的水滴数是" + mTotalConsumeWater, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "当前点击的是：" + waterTag.getName() + "水滴的值是:"
+//                    + waterTag.getNumber() + "总的水滴数是" + mTotalConsumeWater, Toast.LENGTH_SHORT).show();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    OkHttpClient okHttpClient = new OkHttpClient();
+                    FormBody formBody = new FormBody.Builder()
+                            .add("id", String.valueOf(waterTag.getId()))
+                            .add("status", String.valueOf(1))
+                            .build();
+                    Request request = new Request.Builder()
+                            .url(DBConstant.BONUS_URL+"bonus")
+                            .put(formBody)
+                            .build();
+                    try (Response response = okHttpClient.newCall(request).execute()) {
+                        Looper.prepare();
+                        if (response.code() == 200)
+                        {
+                            Toast.makeText(getContext(), "获得" + waterTag.getNumber() + "积分", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Toast.makeText(getContext(), "积分获取异常", Toast.LENGTH_SHORT).show();
+                        }
+                        Looper.loop();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
         }
         view.setTag(R.string.original_y, view.getY());
         animRemoveView(view);
