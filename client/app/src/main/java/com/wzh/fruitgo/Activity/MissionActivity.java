@@ -193,6 +193,7 @@ public class MissionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 timerCancel();
                 alertDialogBuilder = new AlertDialog.Builder(MissionActivity.this);
+                alertDialogBuilder.setCancelable(false);
                 alertDialogBuilder.setMessage("返回任务");
                 alertDialogBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
@@ -293,6 +294,7 @@ public class MissionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 timerCancel();
                 alertDialogBuilder = new AlertDialog.Builder(MissionActivity.this);
+                alertDialogBuilder.setCancelable(false);
                 alertDialogBuilder.setMessage("确定结束任务？");
                 alertDialogBuilder.setPositiveButton("确定退出", new DialogInterface.OnClickListener() {
                     @Override

@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,11 +19,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wzh.fruitgo.Activity.LoginActivity;
-import com.wzh.fruitgo.Activity.RegisterActivity;
 import com.wzh.fruitgo.Config.DBConstant;
 import com.wzh.fruitgo.Fragment.FarmFragment;
-import com.wzh.fruitgo.Fragment.HomeFragmet;
+import com.wzh.fruitgo.Fragment.HomeFragment;
 import com.wzh.fruitgo.Fragment.StoreFragment;
 import com.wzh.fruitgo.Fragment.TodoFragment;
 
@@ -49,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RadioGroup mRgGroup;
     private FragmentManager fragmentManager;
-    private HomeFragmet homeFragment;
+    private HomeFragment homeFragment;
     private TodoFragment todoFragment;
     private FarmFragment farmFragment;
     private StoreFragment storeFragment;
@@ -251,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
             case show_tab_home://主页的fragment
                 mRgGroup.check(R.id.rb_home);
                 if (homeFragment == null) {
-                    homeFragment = new HomeFragmet();
+                    homeFragment = new HomeFragment();
                     transaction.add(R.id.fl_container, homeFragment, FRAGMENT_TAG[index]);
                 } else {
                     transaction.show(homeFragment);

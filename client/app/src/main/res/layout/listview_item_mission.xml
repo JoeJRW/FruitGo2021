@@ -18,7 +18,7 @@
         android:id="@+id/mission_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="#fedd99"
+        app:cardBackgroundColor="#00ffff"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"

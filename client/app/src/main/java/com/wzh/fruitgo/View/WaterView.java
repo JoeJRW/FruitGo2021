@@ -64,7 +64,7 @@ public class WaterView extends FrameLayout {
      * x最多可选取的随机数值
      */
     private static final List<Float> X_MAX_CHOSE_RANDOMS = Arrays.asList(
-            0.01f, 0.05f, 0.1f, 0.6f, 0.11f, 0.16f, 0.21f, 0.26f, 0.31f, 0.7f, 0.75f, 0.8f, 0.85f, 0.87f);
+            0.01f, 0.05f, 0.1f, 0.6f, 0.11f, 0.16f, 0.21f, 0.26f, 0.31f, 0.7f, 0.75f, 0.8f, 0.83f, 0.85f);
     /**
      * y最多可选取的随机数值
      */

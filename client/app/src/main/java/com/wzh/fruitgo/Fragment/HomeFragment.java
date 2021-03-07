@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.wzh.fruitgo.R;
 
-public class HomeFragmet extends Fragment {
+public class HomeFragment extends Fragment {
 
     @Nullable
     @Override
@@ -19,5 +19,15 @@ public class HomeFragmet extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home, null);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initView();
+    }
+
+    void initView(){
+
     }
 }

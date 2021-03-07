@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/logo"
-        android:drawablePadding="5dip"
+        android:drawablePadding="5dp"
         android:text="FruitGo"
         android:textColor="#00BFFF"
         android:textStyle="bold"
