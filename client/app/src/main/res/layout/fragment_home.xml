@@ -66,7 +66,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/home_button_intro_mission"
+        android:background="@drawable/selector_todo_intro_layout_pressed"
         android:padding="10dp"
         android:elevation="8dp">
         <TextView
@@ -99,7 +99,7 @@
         android:layout_height="120dp"
         android:layout_below="@id/layout_introduction_mission"
         android:layout_margin="10dp"
-        android:background="@drawable/home_button_intro_farm"
+        android:background="@drawable/selector_farm_intro_layout_pressed"
         android:padding="10dp"
         android:elevation="8dp">
         <TextView
@@ -115,8 +115,7 @@
             />
 
         <ImageView
-            android:id="@+id/iv_intro_farm"
-            android:layout_width="50dp"
+            android:id="@+id/iv_intro_farm"            android:layout_width="50dp"
             android:layout_height="60dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -133,7 +132,7 @@
         android:layout_height="120dp"
         android:layout_below="@id/layout_introduction_farm"
         android:layout_margin="10dp"
-        android:background="@drawable/home_button_intro_store"
+        android:background="@drawable/selector_store_intro_layout_pressed"
         android:padding="10dp"
         android:elevation="8dp">
         <TextView

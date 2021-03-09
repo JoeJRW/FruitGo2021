@@ -16,7 +16,12 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
     <!--  for WaterView  -->
-    <string name="spd"/>
-    <string name="original_y"/>
-    <string name="isUp"/>
+    <string name="spd" />
+    <string name="original_y" />
+    <string name="isUp" />
+
+    <!--for Introduction-->
+    <string name="todo_intro">番茄钟</string>
+    <string name="farm_intro">计步农场</string>
+    <string name="store_intro">商城</string>
 </resources>

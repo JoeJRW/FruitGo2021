@@ -249,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
                 mRgGroup.check(R.id.rb_home);
                 if (homeFragment == null) {
                     homeFragment = new HomeFragment();
+                    homeFragment.setUserInform(userId,user_tel_num);
                     transaction.add(R.id.fl_container, homeFragment, FRAGMENT_TAG[index]);
                 } else {
                     transaction.show(homeFragment);
