@@ -17,6 +17,7 @@
         android:theme="@style/Theme.FruitGo">
         <activity android:name=".MainActivity"/>
         <activity android:name=".Activity.LoginActivity"/>
+        <activity android:name=".Activity.IntroActivity"/>
         <activity android:name=".Activity.RegisterActivity"/>
         <activity android:name=".Activity.MissionActivity"/>
 
