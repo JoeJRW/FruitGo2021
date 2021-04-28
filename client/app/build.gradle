@@ -44,6 +44,11 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.8.1")
     implementation 'com.alibaba:fastjson:1.2.73'
     implementation 'androidx.preference:preference:1.1.1'
+    implementation 'com.youth.banner:banner:2.1.0'
+    implementation 'com.jakewharton:butterknife:10.2.3'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
