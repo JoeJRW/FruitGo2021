@@ -13,4 +13,10 @@
     <color name="green">#149DEE</color>
     <color name="gray">#77000000</color>
     <color name="grayInner">#11000000</color>
+    <color name="gainsboro">#dcdcdc</color>
+    <color name="firebrick">#b22222</color>
+    <color name="base_color">#505050</color>
+    <color name="red_btn_color_normal">#ffff5454</color>
+    <color name="red_btn_color_pressed">#ffd24242</color>
+    <color name="red_btn_color_disable">#7fff5454</color>
 </resources>

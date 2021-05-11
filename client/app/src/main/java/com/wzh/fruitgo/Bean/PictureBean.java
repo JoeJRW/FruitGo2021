@@ -31,11 +31,8 @@ public class PictureBean {
      */
     public static List<PictureBean> getTestData() {
         List<PictureBean> list = new ArrayList<>();
-        list.add(new PictureBean("https://img.zcool.cn/community/013de756fb63036ac7257948747896.jpg", null, 1));
-        list.add(new PictureBean("https://img.zcool.cn/community/01639a56fb62ff6ac725794891960d.jpg", null, 1));
-        list.add(new PictureBean("https://img.zcool.cn/community/01270156fb62fd6ac72579485aa893.jpg", null, 1));
-        list.add(new PictureBean("https://img.zcool.cn/community/01233056fb62fe32f875a9447400e1.jpg", null, 1));
-        list.add(new PictureBean("https://img.zcool.cn/community/016a2256fb63006ac7257948f83349.jpg", null, 1));
+        list.add(new PictureBean("https://aimg8.dlssyht.cn/ev_user_module_content_tmp/2019_05_09/tmp1557385644_1662130_s.jpg", null, 1));
+        list.add(new PictureBean("https://aimg8.dlszyht.net.cn/ev_user_module_content_tmp/2019_02_25/tmp1551077482_1662130_s.jpg", null, 1));
         return list;
     }
 }

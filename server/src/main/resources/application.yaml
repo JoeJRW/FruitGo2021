@@ -1,6 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:mysql://1.15.100.25:3306/fruitgo?serverTimezone=Asia/Shanghai
-    username: root
-    password: root
-    driver-class-name: com.mysql.jdbc.Driver

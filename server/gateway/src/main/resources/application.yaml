@@ -1,0 +1,33 @@
+server:
+  port: 8002 #端口号
+spring:
+  application:
+    name: gateway #服务名称
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: on
+          lower-case-service-id: on
+      routes:
+        - id: user
+          uri: lb://user-service #eureka注册中心存在的服务名称
+          predicates:
+            - Path=user-service/** #路径配置
+        - id: bonus
+          uri: lb://bonus-service
+          predicates:
+            - Path=bonus-service/**
+        - id: mission
+          uri: lb://mission-service
+          predicates:
+            - Path=mission-service/**
+        - id: goods
+          uri: lb://goods-service
+          predicates:
+            - Path=goods-service/**
+eureka:
+  client:
+    service-url:
+      defaultZone: http://1.15.100.25:8001/eureka/ #注册中心地址ַ

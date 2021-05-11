@@ -1,0 +1,22 @@
+server:
+  port: 8004 #端口
+spring:
+  application:
+    name: user-service #服务名称
+  datasource:
+    url: jdbc:mysql://1.15.100.25:3306/fruitgo?serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://1.15.100.25:8001/eureka/ #注册中心地址
+#feign的配置，连接超时及读取超时配置
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
